@@ -1,5 +1,8 @@
 function onCreate() {
-  EdocsApi.setAttributeValue({ code: "employee", value: CurrentDocument.initiatorId });
+  EdocsApi.setAttributeValue({
+    code: "employee",
+    value: CurrentDocument.initiatorId,
+  });
 }
 
 function onBeforeCardSave() {
@@ -7,7 +10,7 @@ function onBeforeCardSave() {
 }
 
 function onCardInitialize() {
-debugger
+  debugger;
   onChangecurrencyEUR();
   onChangedateRate();
   onChangeCurrencyFrom();
@@ -18,8 +21,12 @@ debugger
 }
 
 function onChangeemployee() {
-debugger
-  EdocsApi.setAttributeValue({ code: "directorInityator", value: null, text: null });
+  debugger;
+  EdocsApi.setAttributeValue({
+    code: "directorInityator",
+    value: null,
+    text: null,
+  });
 
   if (EdocsApi.getAttributeValue("employee").value) {
     setdirectorInityator();
@@ -31,8 +38,14 @@ debugger
 function setemployeeId() {
   var employee = EdocsApi.getAttributeValue("employee").value;
   var employeeId = EdocsApi.getAttributeValue("employeeId").value;
-  if (employee) employeeId = EdocsApi.getEmployeeDataByEmployeeID(employee).personId;
-  if (employeeId != EdocsApi.getAttributeValue("employeeId").value) EdocsApi.setAttributeValue({ code: "employeeId", value: employeeId, text: null });
+  if (employee)
+    employeeId = EdocsApi.getEmployeeDataByEmployeeID(employee).personId;
+  if (employeeId != EdocsApi.getAttributeValue("employeeId").value)
+    EdocsApi.setAttributeValue({
+      code: "employeeId",
+      value: employeeId,
+      text: null,
+    });
 }
 
 function setdirectorInityator() {
@@ -42,34 +55,60 @@ function setdirectorInityator() {
     if (manager) {
       var unitLevel = manager.unitLevel;
       if (manager.employeeId == Number(employee)) {
-        manager = EdocsApi.getEmployeeManagerByEmployeeID(manager.employeeId, manager.unitLevel - 1);
+        manager = EdocsApi.getEmployeeManagerByEmployeeID(
+          manager.employeeId,
+          manager.unitLevel - 1
+        );
         if (manager) {
-          EdocsApi.setAttributeValue({ code: "directorInityator", value: manager.employeeId, text: null });
+          EdocsApi.setAttributeValue({
+            code: "directorInityator",
+            value: manager.employeeId,
+            text: null,
+          });
         } else {
           var i = 2;
           while (!manager && unitLevel > 1) {
-            manager = EdocsApi.getEmployeeManagerByEmployeeID(employee, unitLevel - i);
+            manager = EdocsApi.getEmployeeManagerByEmployeeID(
+              employee,
+              unitLevel - i
+            );
             i++;
           }
-          EdocsApi.setAttributeValue({ code: "directorInityator", value: manager.employeeId, text: null });
+          EdocsApi.setAttributeValue({
+            code: "directorInityator",
+            value: manager.employeeId,
+            text: null,
+          });
         }
       } else {
-        EdocsApi.setAttributeValue({ code: "directorInityator", value: manager.employeeId, text: null });
+        EdocsApi.setAttributeValue({
+          code: "directorInityator",
+          value: manager.employeeId,
+          text: null,
+        });
       }
     } else {
       var empl = EdocsApi.getEmployeeDataByEmployeeID(employee);
-      manager = EdocsApi.getEmployeeManagerByEmployeeID(empl.employeeId, empl.unitLevel - 1);
-      if (manager) EdocsApi.setAttributeValue({ code: "directorInityator", value: manager.employeeId, text: null });
+      manager = EdocsApi.getEmployeeManagerByEmployeeID(
+        empl.employeeId,
+        empl.unitLevel - 1
+      );
+      if (manager)
+        EdocsApi.setAttributeValue({
+          code: "directorInityator",
+          value: manager.employeeId,
+          text: null,
+        });
     }
   }
-onChangedirectorInityator();
+  onChangedirectorInityator();
 }
 
 function onChangetable2() {
   copyTablToFields();
   calculateDaysCount();
   setAndCalculateDays();
-setCalculationOfValues();
+  setCalculationOfValues();
 }
 
 function copyTablToFields() {
@@ -82,11 +121,31 @@ function copyTablToFields() {
 
   if (table) {
     for (var i = 0; i < table.length; i++) {
-      var Period_from = EdocsApi.findElementByProperty("code", "Period_from", table[i]).value;
-      var period_to = EdocsApi.findElementByProperty("code", "period_to", table[i]).value;
-      var DaysCount = EdocsApi.findElementByProperty("code", "DaysCount", table[i]).value;
-      var DestinationPlace = EdocsApi.findElementByProperty("code", "DestinationPlace", table[i]).value;
-      var ObjectBusinesTrip = EdocsApi.findElementByProperty("code", "ObjectBusinesTrip", table[i]).value;
+      var Period_from = EdocsApi.findElementByProperty(
+        "code",
+        "Period_from",
+        table[i]
+      ).value;
+      var period_to = EdocsApi.findElementByProperty(
+        "code",
+        "period_to",
+        table[i]
+      ).value;
+      var DaysCount = EdocsApi.findElementByProperty(
+        "code",
+        "DaysCount",
+        table[i]
+      ).value;
+      var DestinationPlace = EdocsApi.findElementByProperty(
+        "code",
+        "DestinationPlace",
+        table[i]
+      ).value;
+      var ObjectBusinesTrip = EdocsApi.findElementByProperty(
+        "code",
+        "ObjectBusinesTrip",
+        table[i]
+      ).value;
 
       Period_from_copy += moment(Period_from).format("DD.MM.YYYY") + "\n\n";
       period_to_copy += moment(period_to).format("DD.MM.YYYY") + "\n\n";
@@ -96,11 +155,31 @@ function copyTablToFields() {
     }
   }
 
-  EdocsApi.setAttributeValue({ code: "Period_from_copy", value: removeLastSlash(Period_from_copy), text: null });
-  EdocsApi.setAttributeValue({ code: "period_to_copy", value: removeLastSlash(period_to_copy), text: null });
-  EdocsApi.setAttributeValue({ code: "DaysCount_copy", value: removeLastSlash(DaysCount_copy), text: null });
-  EdocsApi.setAttributeValue({ code: "DestinationPlaceCopy", value: removeLastSlash(DestinationPlaceCopy), text: null });
-  EdocsApi.setAttributeValue({ code: "ObjectBusinesTripCopy", value: removeLastSlash(ObjectBusinesTripCopy), text: null });
+  EdocsApi.setAttributeValue({
+    code: "Period_from_copy",
+    value: removeLastSlash(Period_from_copy),
+    text: null,
+  });
+  EdocsApi.setAttributeValue({
+    code: "period_to_copy",
+    value: removeLastSlash(period_to_copy),
+    text: null,
+  });
+  EdocsApi.setAttributeValue({
+    code: "DaysCount_copy",
+    value: removeLastSlash(DaysCount_copy),
+    text: null,
+  });
+  EdocsApi.setAttributeValue({
+    code: "DestinationPlaceCopy",
+    value: removeLastSlash(DestinationPlaceCopy),
+    text: null,
+  });
+  EdocsApi.setAttributeValue({
+    code: "ObjectBusinesTripCopy",
+    value: removeLastSlash(ObjectBusinesTripCopy),
+    text: null,
+  });
 }
 
 function removeLastSlash(str) {
@@ -119,23 +198,53 @@ function onChangeperiod_to() {
 function calculateDaysCount() {
   var Period_from = EdocsApi.getAttributeValue("Period_from").value;
   var period_to = EdocsApi.getAttributeValue("period_to").value;
-  if (Period_from && period_to) EdocsApi.setAttributeValue({ code: "DaysCount", value: EdocsApi.getVacationDaysCount(Period_from, period_to), text: null });
+  if (Period_from && period_to)
+    EdocsApi.setAttributeValue({
+      code: "DaysCount",
+      value: EdocsApi.getVacationDaysCount(Period_from, period_to),
+      text: null,
+    });
 }
 
 function setAndCalculateDays() {
   var table = EdocsApi.getAttributeValue("table2").value;
   if (table && table.length > 0) {
-    var Period_from = EdocsApi.findElementByProperty("code", "Period_from", table[0]).value;
-  //  if (getWorkDays(new Date(new Date(CurrentDocument.created).setHours(0, 0, 0, 0)), new Date(new Date(Period_from).setHours(0, 0, 0, 0))) < 7) {
- //     throw "Обмеження створення документу за 7 роб днів.";
-//    }
-    var period_to = EdocsApi.findElementByProperty("code", "period_to", table[table.length - 1]).value;
-    EdocsApi.setAttributeValue({ code: "dataTripStart", value: Period_from, text: null });
-    EdocsApi.setAttributeValue({ code: "dataTripEnd", value: period_to, text: null });
-    EdocsApi.setAttributeValue({ code: "days", value: EdocsApi.getVacationDaysCount(Period_from, period_to), text: null });
+    var Period_from = EdocsApi.findElementByProperty(
+      "code",
+      "Period_from",
+      table[0]
+    ).value;
+    var period_to = EdocsApi.findElementByProperty(
+      "code",
+      "period_to",
+      table[table.length - 1]
+    ).value;
+    EdocsApi.setAttributeValue({
+      code: "dataTripStart",
+      value: Period_from,
+      text: null,
+    });
+    EdocsApi.setAttributeValue({
+      code: "dataTripEnd",
+      value: period_to,
+      text: null,
+    });
+    EdocsApi.setAttributeValue({
+      code: "days",
+      value: EdocsApi.getVacationDaysCount(Period_from, period_to),
+      text: null,
+    });
   } else {
-    EdocsApi.setAttributeValue({ code: "dataTripStart", value: null, text: null });
-    EdocsApi.setAttributeValue({ code: "dataTripEnd", value: null, text: null });
+    EdocsApi.setAttributeValue({
+      code: "dataTripStart",
+      value: null,
+      text: null,
+    });
+    EdocsApi.setAttributeValue({
+      code: "dataTripEnd",
+      value: null,
+      text: null,
+    });
     EdocsApi.setAttributeValue({ code: "days", value: null, text: null });
   }
 }
@@ -162,7 +271,11 @@ function setRate() {
       dateRate: dateRate,
     };
 
-    const response = EdocsApi.runExternalFunction("Navision", "EdocsGetExchangeRate", methodData);
+    const response = EdocsApi.runExternalFunction(
+      "Navision",
+      "EdocsGetExchangeRate",
+      methodData
+    );
 
     if (!response.data) {
       throw "Не отримано відповіді від зовіншньої системи";
@@ -181,11 +294,11 @@ function setRate() {
 }
 
 function onChangecurrencyEUR() {
-debugger
+  debugger;
   setRate();
 }
 function onChangedateRate() {
-debugger
+  debugger;
   setRate();
 }
 
@@ -200,26 +313,37 @@ function setCurrencyRate() {
       CurrencyTo: CurrencyTo,
       Date: Date,
     };
-    const response = EdocsApi.runExternalFunction("Navision", "EdocsGetCurrencyRate", methodData);
+    const response = EdocsApi.runExternalFunction(
+      "Navision",
+      "EdocsGetCurrencyRate",
+      methodData
+    );
     if (!response.data) {
       throw "Не отримано відповіді від зовіншньої системи";
     } else {
       if (response.data.error) {
         EdocsApi.message(response.data.error);
       } else {
-        EdocsApi.setAttributeValue({ code: Object.keys(response.data)[0], value: Object.values(response.data)[0] });
+        EdocsApi.setAttributeValue({
+          code: Object.keys(response.data)[0],
+          value: Object.values(response.data)[0],
+        });
       }
     }
   } else {
-    EdocsApi.setAttributeValue({ code: "CrossCourse", value: null, text: null });
+    EdocsApi.setAttributeValue({
+      code: "CrossCourse",
+      value: null,
+      text: null,
+    });
   }
 }
 function onChangeCurrencyFrom() {
-debugger
+  debugger;
   setCurrencyRate();
 }
 function onChangeCurrencyTo() {
-debugger
+  debugger;
   setCurrencyRate();
 }
 
@@ -231,21 +355,49 @@ function onChangeDate() {
 function setEmployeeInfo() {
   const employeeId = EdocsApi.getAttributeValue("employeeId").value;
   if (employeeId) {
-    const response = EdocsApi.runExternalFunction("Navision", "EdocsGetEmploeeInfo", {
-      employeeId: employeeId,
-    });
+    const response = EdocsApi.runExternalFunction(
+      "Navision",
+      "EdocsGetEmploeeInfo",
+      {
+        employeeId: employeeId,
+      }
+    );
     if (!response.data) {
       throw "Не отримано відповіді від зовіншньої системи";
     } else {
       if (response.data.error) {
         EdocsApi.message("Ваших даних немає в зовнішній системі");
       } else {
-        EdocsApi.setAttributeValue({ code: "name", value: response.data.attributeValues[0].name, text: null });
-        EdocsApi.setAttributeValue({ code: "surname", value: response.data.attributeValues[0].surname, text: null });
-        EdocsApi.setAttributeValue({ code: "LastName", value: response.data.attributeValues[0].LastName, text: null });
-        EdocsApi.setAttributeValue({ code: "position", value: response.data.attributeValues[0].position, text: null });
-        EdocsApi.setAttributeValue({ code: "unit", value: response.data.attributeValues[0].unit, text: null });
-        EdocsApi.setAttributeValue({ code: "department", value: response.data.attributeValues[0].department, text: null });
+        EdocsApi.setAttributeValue({
+          code: "name",
+          value: response.data.attributeValues[0].name,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "surname",
+          value: response.data.attributeValues[0].surname,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "LastName",
+          value: response.data.attributeValues[0].LastName,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "position",
+          value: response.data.attributeValues[0].position,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "unit",
+          value: response.data.attributeValues[0].unit,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "department",
+          value: response.data.attributeValues[0].department,
+          text: null,
+        });
       }
     }
   } else {
@@ -278,54 +430,94 @@ function setControlHidden(code) {
 }
 
 function setcountry() {
-/*
-  const travelDirection = EdocsApi.getAttributeValue("travelDirection").value;
-  if (travelDirection && travelDirection == "Україна") {
-    setValueAttr("country", travelDirection);
+  if (EdocsApi.getAttributeValue("travelDirection").value == "Україна") {
+    if (EdocsApi.getAttributeValue("country").value != "Україна")
+      EdocsApi.setAttributeValue({
+        code: "country",
+        value: "Україна",
+        text: null,
+      });
   } else {
-    setValueAttr("country", null);
-  }
-*/
-  if(EdocsApi.getAttributeValue("travelDirection").value == "Україна"){
-    if(EdocsApi.getAttributeValue('country').value != "Україна")
-      EdocsApi.setAttributeValue({code: 'country', value: 'Україна', text: null});
-  }
-  else{
-    if(EdocsApi.getAttributeValue('country').value)
-    EdocsApi.setAttributeValue({code: 'country', value: null, text: null});
+    if (EdocsApi.getAttributeValue("country").value == "Україна")
+      EdocsApi.setAttributeValue({ code: "country", value: null, text: null });
   }
 }
 
-function setChangetravelDirection(){
-debugger
-  if (EdocsApi.getAttributeValue('travelDirection').value =='За кордон') {
-    //  EdocsApi.setControlProperties({ code: 'carBrand', hidden: true, required: false });
-      EdocsApi.setControlProperties({ code: 'currencyEUR', hidden: false, required: true });
-      EdocsApi.setControlProperties({ code: 'dateRate', hidden: false, required: true });
-      EdocsApi.setControlProperties({ code: 'rate', hidden: false, required: true });
-      EdocsApi.setControlProperties({ code: 'amountCurrency', hidden: false, required: false, disabled: true });
+function setChangetravelDirection() {
+  debugger;
+  if (EdocsApi.getAttributeValue("travelDirection").value == "За кордон") {
+    EdocsApi.setControlProperties({
+      code: "currencyEUR",
+      hidden: false,
+      required: true,
+    });
+    EdocsApi.setControlProperties({
+      code: "dateRate",
+      hidden: false,
+      required: true,
+    });
+    EdocsApi.setControlProperties({
+      code: "rate",
+      hidden: false,
+      required: true,
+    });
+    EdocsApi.setControlProperties({
+      code: "amountCurrency",
+      hidden: false,
+      required: false,
+      disabled: true,
+    });
 
-  } 
-  else {
-   //   EdocsApi.setControlProperties({ code: 'carBrand', hidden: false, required: false });
-      EdocsApi.setControlProperties({ code: 'currencyEUR', hidden: true, required: false });
-      EdocsApi.setControlProperties({ code: 'dateRate', hidden: true, required: false });
-      EdocsApi.setControlProperties({ code: 'rate', hidden: true, required: false });
-      EdocsApi.setControlProperties({ code: 'amountCurrency', hidden: true, required: false  });        
-      //setCalculationOfValues();
-  }    
-setCalculationOfValues();
+    setControlShow("CurrencyFrom");
+    setControlShow("CurrencyTo");
+    setControlShow("Date");
+    setControlShow("CrossCourse");
+    setControlRequired("CurrencyFrom");
+    setControlRequired("CurrencyTo");
+    setControlRequired("Date");
+  } else {
+    EdocsApi.setControlProperties({
+      code: "currencyEUR",
+      hidden: true,
+      required: false,
+    });
+    EdocsApi.setControlProperties({
+      code: "dateRate",
+      hidden: true,
+      required: false,
+    });
+    EdocsApi.setControlProperties({
+      code: "rate",
+      hidden: true,
+      required: false,
+    });
+    EdocsApi.setControlProperties({
+      code: "amountCurrency",
+      hidden: true,
+      required: false,
+    });
+
+    setControlHidden("CurrencyFrom");
+    setControlHidden("CurrencyTo");
+    setControlHidden("Date");
+    setControlHidden("CrossCourse");
+    setControlRequired("CurrencyFrom", false);
+    setControlRequired("CurrencyTo", false);
+    setControlRequired("Date", false);
+  }
+  setCalculationOfValues();
 }
 
-function onChangetravelDirection() {    
-    setcountry(); 
-    setChangetravelDirection();       
+function onChangetravelDirection() {
+  setcountry();
+  setChangetravelDirection();
 }
-
 
 function validationNumber(attr) {
   let number;
-  attr.value ? (number = parseFloat(attr.value.split(",").join(".")).toFixed(2)) : (number = 0);
+  attr.value
+    ? (number = parseFloat(attr.value.split(",").join(".")).toFixed(2))
+    : (number = 0);
   return number;
 }
 
@@ -337,17 +529,12 @@ function setValueAttr(code, value, text) {
 }
 
 function setCalculationOfValues() {
-debugger
+  debugger;
   const travelDirection = setmoney_per_day();
-//const travelDirection = EdocsApi.getAttributeValue("travelDirection");
-
- 
 
   let days = EdocsApi.getAttributeValue("days");
   if (days.value && travelDirection) {
     days = days.value;
-
- 
 
     let flightENG = EdocsApi.getAttributeValue("FlightENG");
     let hotelENG = EdocsApi.getAttributeValue("HotelENG");
@@ -360,13 +547,12 @@ debugger
     let taxi = EdocsApi.getAttributeValue("Taxi");
     let other_costs = EdocsApi.getAttributeValue("Other_costs");
     let other_costsENG = EdocsApi.getAttributeValue("other_costsENG");
-    let money_per_day = EdocsApi.getAttributeValue("money_per_day").text;
+    //let money_per_day = EdocsApi.getAttributeValue("money_per_day").text;
+    let money_per_day1 = EdocsApi.getAttributeValue("money_per_day1").value;
     let travelDirection = EdocsApi.getAttributeValue("travelDirection");
     if (travelDirection.value == "За кордон") {
       rate = EdocsApi.getAttributeValue("rate").value;
     }
-
- 
 
     flightENG = validationNumber(flightENG);
     hotelENG = validationNumber(hotelENG);
@@ -379,51 +565,100 @@ debugger
     other_costs = validationNumber(other_costs);
     other_costsENG = validationNumber(other_costsENG);
 
- 
-
     flight = (flightENG * rate).toFixed(2);
     hotel = (hotelENG * rate).toFixed(2);
     taxi = (taxiENG * rate).toFixed(2);
     car_related = (car_relatedENG * rate).toFixed(2);
     publicTransport = (publicTransportENG * rate).toFixed(2);
     other_costs = (other_costsENG * rate).toFixed(2);
-    let amountCurrency = Number(flightENG) + Number(hotelENG) + Number(taxiENG) + Number(car_relatedENG) + Number(publicTransportENG) + Number(other_costsENG);
-    let sumAll = (money_per_day * days).toFixed(2);
+    let amountCurrency =
+      Number(flightENG) +
+      Number(hotelENG) +
+      Number(taxiENG) +
+      Number(car_relatedENG) +
+      Number(publicTransportENG) +
+      Number(other_costsENG);
+    //let sumAll = (money_per_day * days).toFixed(2);
+    let sumAll = (money_per_day1 * days).toFixed(2);
     const total = setValueAttr("Flight", flight);
     setValueAttr("Hotel", hotel);
     setValueAttr("Taxi", taxi);
     setValueAttr("Car_related", car_related);
     setValueAttr("PublicTransport", publicTransport);
     setValueAttr("Other_costs", other_costs);
-    setValueAttr("amountCurrency", (amountCurrency).toFixed(2));
+    setValueAttr("amountCurrency", amountCurrency.toFixed(2));
     setValueAttr("sumAll", sumAll);
-    EdocsApi.setAttributeValue({ code: "Transportation", value: (Number(EdocsApi.getAttributeValue("Flight").value) + Number(EdocsApi.getAttributeValue("Taxi").value) + Number(EdocsApi.getAttributeValue("PublicTransport").value)).toFixed(2), text: null });
-    EdocsApi.setAttributeValue({ code: "Total", value: (Number(EdocsApi.getAttributeValue("Transportation").value) + Number(EdocsApi.getAttributeValue("Hotel").value) + Number(EdocsApi.getAttributeValue("Car_related").value) + Number(EdocsApi.getAttributeValue("sumAll").value)+ Number(EdocsApi.getAttributeValue("Other_costs").value)).toFixed(2), text: null });
-    
+    EdocsApi.setAttributeValue({
+      code: "Transportation",
+      value: (
+        Number(EdocsApi.getAttributeValue("Flight").value) +
+        Number(EdocsApi.getAttributeValue("Taxi").value) +
+        Number(EdocsApi.getAttributeValue("PublicTransport").value)
+      ).toFixed(2),
+      text: null,
+    });
+    EdocsApi.setAttributeValue({
+      code: "Total",
+      value: (
+        Number(EdocsApi.getAttributeValue("Transportation").value) +
+        Number(EdocsApi.getAttributeValue("Hotel").value) +
+        Number(EdocsApi.getAttributeValue("Car_related").value) +
+        Number(EdocsApi.getAttributeValue("sumAll").value) +
+        Number(EdocsApi.getAttributeValue("Other_costs").value)
+      ).toFixed(2),
+      text: null,
+    });
   }
 }
 
 function setmoney_per_day() {
-debugger
+  debugger;
   const travelDirection = EdocsApi.getAttributeValue("travelDirection");
   if (travelDirection.value) {
-
     switch (travelDirection.value) {
       case "Україна":
-if(EdocsApi.getAttributeValue('money_per_day').text != '850.00') {
-        setValueAttr("money_per_day", 1, "850.00");
-}
+        //видалити блок, коли money_per_day1 запрацює
+        if (EdocsApi.getAttributeValue("money_per_day").text != "850.00") {
+          setValueAttr("money_per_day", 1, "850.00");
+        }
+
+        if (EdocsApi.getAttributeValue("money_per_day1").text != "850.00") {
+          setValueAttr("money_per_day1", "850.00");
+        }
         break;
       case "За кордон":
-if(EdocsApi.getAttributeValue('money_per_day').text != '1750.00') {
-        setValueAttr("money_per_day", 2, "1750.00");
-}
+        if (EdocsApi.getAttributeValue("money_per_day").text != "1750.00") {
+          setValueAttr("money_per_day", 2, "1750.00");
+        }
         break;
       default:
         break;
     }
   }
   return travelDirection.value;
+}
+
+function onChangerate() {
+  debugger;
+  const travelDirection = EdocsApi.getAttributeValue("travelDirection");
+  if (travelDirection.value) {
+    switch (travelDirection.value) {
+      case "Україна":
+        break;
+      case "За кордон":
+        setValueAttr(
+          "money_per_day1",
+          (
+            Number(EdocsApi.getAttributeValue("CrossCourse").value) *
+            Number(EdocsApi.getAttributeValue("CosTravelDay").value) *
+            Number(EdocsApi.getAttributeValue("rate").value)
+          ).toFixed(2)
+        );
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 function onChangeFlightENG() {
@@ -445,7 +680,7 @@ function onChangeother_costsENG() {
   setCalculationOfValues();
 }
 function onChangedays() {
-debugger
+  debugger;
   setCalculationOfValues();
 }
 function onChangemoney_per_day() {
@@ -455,41 +690,53 @@ function onChangeDaysCount() {
   setCalculationOfValues();
 }
 
-
-function onChangedirectorInityator(){
-    var directorInityator = EdocsApi.getAttributeValue('directorInityator').value;
-    if(directorInityator){
-       const response = EdocsApi.runExternalFunction("Navision", "EdocsGetEmploeeInfo", { employeeId: EdocsApi.getEmployeeDataByEmployeeID(directorInityator)?.personId });
-        if(response && response.data){            
-            if(response.data.error){
-                EdocsApi.message('Інформація по керівнику відсутня');
-            } 
-            else{
-                EdocsApi.setAttributeValue({ code: "ManagerName", value: response.data.attributeValues[0].name, text: null });
-                EdocsApi.setAttributeValue({ code: "ManagerSurnames", value: response.data.attributeValues[0].LastName, text: null });
-               // EdocsApi.setAttributeValue({ code: "ManagerPosition", value: response.data.attributeValues[0].position, text: null });
-            }
-        } 
-        else{
-            throw "Не отримано відповіді від зовіншньої системи";
-        }
+function onChangedirectorInityator() {
+  var directorInityator = EdocsApi.getAttributeValue("directorInityator").value;
+  if (directorInityator) {
+    const response = EdocsApi.runExternalFunction(
+      "Navision",
+      "EdocsGetEmploeeInfo",
+      {
+        employeeId:
+          EdocsApi.getEmployeeDataByEmployeeID(directorInityator)?.personId,
+      }
+    );
+    if (response && response.data) {
+      if (response.data.error) {
+        EdocsApi.message("Інформація по керівнику відсутня");
+      } else {
+        EdocsApi.setAttributeValue({
+          code: "ManagerName",
+          value: response.data.attributeValues[0].name,
+          text: null,
+        });
+        EdocsApi.setAttributeValue({
+          code: "ManagerSurnames",
+          value: response.data.attributeValues[0].LastName,
+          text: null,
+        });
+      }
+    } else {
+      throw "Не отримано відповіді від зовіншньої системи";
     }
-    else{
-        EdocsApi.setAttributeValue({ code: "ManagerName", value: null, text: null });
-        EdocsApi.setAttributeValue({ code: "ManagerSurnames", value: null, text: null });
-       // EdocsApi.setAttributeValue({ code: "ManagerPosition", value: null, text: null });
-    }
+  } else {
+    EdocsApi.setAttributeValue({
+      code: "ManagerName",
+      value: null,
+      text: null,
+    });
+    EdocsApi.setAttributeValue({
+      code: "ManagerSurnames",
+      value: null,
+      text: null,
+    });
+  }
 }
+
 //Перевірка кирилиці 0510
-
 function checkForCyrillic() {
-
   if (
-
     EdocsApi.getAttributeValue("Annotations").value.search(/[а-яА-Я]/) != "-1"
-
   )
-
     throw `Мова введення в поле "Примітки" -  латиниця`;
-
 }
